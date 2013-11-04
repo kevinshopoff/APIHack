@@ -1,38 +1,32 @@
-function initialize() {
-  var mapOptions = {
-    zoom: 8,
-    center: new google.maps.LatLng(-34.397, 150.644),
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
+var google = google || {};
+var geocoder;
+var map;
 
-  var map = new google.maps.Map(document.getElementById('map-canvas'),
-      mapOptions);
+function initialize() {
+	var mapOptions = {
+		zoom: 8,
+		center: new google.maps.LatLng(-34.397, 150.644),
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+	};
+
+	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+  
+	geocoder = new google.maps.Geocoder();
+ 
+	console.log('geocoder: ', geocoder);
 }
 
 function loadScript() {
-  var script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&' +
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&' +
       'callback=initialize';
-  document.body.appendChild(script);
+	document.body.appendChild(script);
 }
-$(document).ready(function() {
-	/*when the button is clicked*/
-	$("#btn").on("click", function() {
-		var currentSearch = $('input[name="searchString"]').val();
-		console.log("You want to search for " + currentSearch);
-		return false;
-	});
 
-	
-	var geocoder;
-	var map;
-	
-	geocoder = new google.maps.Geocoder();
-	
 	function plotAddress(mySearch) {
 		var address = mySearch;
-		geocoder.geocodr( {'address': address}, function(results, status) {
+		geocoder.geocode( {'address': address}, function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
 				map.setCenter(results[0].geometry.location);
 				var marker = new google.maps.Marker({
@@ -45,6 +39,14 @@ $(document).ready(function() {
 		});
 	}
 	
+$(document).ready(function() {	
+	/*when the button is clicked*/
+	$("#btn").on("click", function() {
+		var currentSearch = $('input[name="searchString"]').val();
+		console.log("You want to search for " + currentSearch);
+		plotAddress(currentSearch)
+		return false;
+	});
 
 	/*this still needs to be updated for the map hack*/
 	/*when Enter is pressed*/
@@ -52,7 +54,7 @@ $(document).ready(function() {
 		if (event.which === 13) {
 			var currentSearch = $('input[name="searchString"]').val();
 			console.log("You want to search for " + currentSearch);
-			plotAddress(currentSearch)
+			plotAddress(currentSearch);
 			return false;
 		}
 	});
