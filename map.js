@@ -1,6 +1,10 @@
 var google = google || {};
 var geocoder;
 var map;
+var startLat;
+var startLong;
+var endLat;
+var endLong;
 
 function initialize() {
 	var mapOptions = {
@@ -24,15 +28,48 @@ function loadScript() {
 	document.body.appendChild(script);
 }
 
+function getDirections(start, finish) {
+	console.log('Get Directions from: ' + start + ' to: ' + finish);
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.src = 'http://maps.googleapis.com/maps/api/directions/json?origin=' + start + '&destination=' + finish + '&sensor=false&' + 
+		'callback=blah';
+	console.log(script.src);
+	document.body.appendChild(script);
+	console.log('end of Get Directions');
+	    /*$.ajax({ 
+        type: 'GET',
+        url: 'http://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&sensor=false' ,
+        dataType: 'json', 
+        success: function(data) { 
+            alert('success');
+        }
+    });*/
+}
+
+function blah() {
+	console.log('blah');
+};
+
+
 	function plotAddress(mySearch) {
 		var address = mySearch;
 		geocoder.geocode( {'address': address}, function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
 				map.setCenter(results[0].geometry.location);
+				startLat = results[0].geometry.location.lb;
+				startLong = results[0].geometry.location.mb;
 				var marker = new google.maps.Marker({
 					map: map,
 					position: results[0].geometry.location
 				});
+				var hereToThere = getDirections('Dallas', address);
+				console.log('Got back to plotAddress');
+				console.log(hereToThere);
+				/*var hereToThere = 'http://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&sensor=false&callback=blah'
+				$.getJSON(hereToThere, function(data) {
+					console.log(data);
+				});*/
 			} else {
 				alert('Geocode was not successful for the following reason: ' + status);
 			}
