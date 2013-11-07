@@ -5,6 +5,7 @@ var startLat;
 var startLong;
 var endLat;
 var endLong;
+var json = null;
 
 function initialize() {
 	var mapOptions = {
@@ -28,15 +29,49 @@ function loadScript() {
 	document.body.appendChild(script);
 }
 
+/*var json = (function () {
+    var json = null;
+    $.ajax({
+        'async': false,
+        'global': false,
+        'url': my_url,
+        'dataType': "json",
+        'success': function (data) {
+            json = data;
+        }
+    });
+    return json;
+})(); */
+
+
 function getDirections(start, finish) {
 	console.log('Get Directions from: ' + start + ' to: ' + finish);
-	var script = document.createElement('script');
+	/*var script = document.createElement('script');
 	script.type = 'text/javascript';
 	script.src = 'http://maps.googleapis.com/maps/api/directions/json?origin=' + start + '&destination=' + finish + '&sensor=false&' + 
 		'callback=blah';
 	console.log(script.src);
-	document.body.appendChild(script);
+	document.body.appendChild(script);*/
+	$.ajax({
+		'async': false,
+		'global': false,
+		'url' : 'http://maps.googleapis.com/maps/api/directions/json?origin=' + start + '&destination=' + finish + '&sensor=false&' + 
+		'callback=blah',
+		'dataType': "json",
+		'success': function(data) {
+			json = data;
+		}
+	});
+	
+	console.log('json is: ' + json);
+	
+	
 	console.log('end of Get Directions');
+	
+	
+	
+	/*there needs to be some kind of return value set*/
+	return json;
 	    /*$.ajax({ 
         type: 'GET',
         url: 'http://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&sensor=false' ,
@@ -47,8 +82,9 @@ function getDirections(start, finish) {
     });*/
 }
 
-function blah() {
-	console.log('blah');
+function blah(data) {
+	json = data;
+	console.log(json);
 };
 
 
@@ -65,7 +101,7 @@ function blah() {
 				});
 				var hereToThere = getDirections('Dallas', address);
 				console.log('Got back to plotAddress');
-				console.log(hereToThere);
+				console.log('hereToThere is: ' + hereToThere);
 				/*var hereToThere = 'http://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&sensor=false&callback=blah'
 				$.getJSON(hereToThere, function(data) {
 					console.log(data);
