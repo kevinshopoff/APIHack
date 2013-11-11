@@ -83,7 +83,7 @@ function getDirections(start, finish) {
 				$('#directions').append('<p>' + result.routes[0].legs[0].steps[i].distance.text + '</p>');
 				$('#directions').append('<p>' + result.routes[0].legs[0].steps[i].duration.text + '</p>');
 				$('#directions').append('<p>' + result.routes[0].legs[0].steps[i].maneuver + '</p>');
-				$('#directions').append('<p>' + result.routes[0].legs[0].steps[i].travel_mode + '</p><br>')
+				$('#directions').append('<p>' + result.routes[0].legs[0].steps[i].travel_mode + '</p><br>');
 				console.log('i = ' + i + ": " + result.routes[0].legs[0].steps[i].distance.text);
 			};
 		}
@@ -112,8 +112,10 @@ function blah(data) {
 
 
 	function plotAddress(startPoint, mySearch) {
-		var address = mySearch;
-		geocoder.geocode( {'address': address}, function(results, status) {
+		var toPoint = mySearch;
+		var fromPoint = startPoint
+		
+		geocoder.geocode( {'address': toPoint}, function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
 				map.setCenter(results[0].geometry.location);
 				startLat = results[0].geometry.location.lb;
@@ -122,7 +124,7 @@ function blah(data) {
 					map: map,
 					position: results[0].geometry.location
 				});
-				var hereToThere = getDirections('Dallas', address);
+				var hereToThere = getDirections('Dallas', toPoint);
 				console.log('Got back to plotAddress');
 				console.log('hereToThere is: ' + hereToThere);
 				/*var hereToThere = 'http://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&sensor=false&callback=blah'
