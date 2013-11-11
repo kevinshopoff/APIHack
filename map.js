@@ -76,10 +76,10 @@ function getDirections(start, finish) {
 	};
 	directionsService.route(request, function(result, status) {
 		if (status == google.maps.DirectionsStatus.OK) {
-			console.log('result = ' + result.routes[0].legs[0].steps[3]./*html_instructions*//*duration.text*/html_instructions);
+			console.log('result = ' + result.routes[0].legs[0].steps[3]./*html_instructions*//*duration.text*/instructions);
 			console.log('num steps = ' + result.routes[0].legs[0].steps.length);
 			for (i = 0; i<result.routes[0].legs[0].steps.length; i++) {
-				/*$('#directions').append('<p>' + result.routes[0].legs[0].steps[i].html_instructions + '</p>');*/
+				$('#directions').append('<p>' + result.routes[0].legs[0].steps[i].instructions + '</p>');
 				$('#directions').append('<p>' + result.routes[0].legs[0].steps[i].distance.text + '</p>');
 				$('#directions').append('<p>' + result.routes[0].legs[0].steps[i].duration.text + '</p>');
 				$('#directions').append('<p>' + result.routes[0].legs[0].steps[i].maneuver + '</p>');
@@ -111,9 +111,10 @@ function blah(data) {
 };
 
 
-	function plotAddress(startPoint, mySearch) {
-		var address = mySearch;
-		geocoder.geocode( {'address': address}, function(results, status) {
+	function plotAddress(startLoc, endLoc) {
+		var startAddress = startLoc;
+		var endAddress = endLoc;
+		geocoder.geocode( {'address': endAddress}, function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
 				map.setCenter(results[0].geometry.location);
 				startLat = results[0].geometry.location.lb;
@@ -122,7 +123,7 @@ function blah(data) {
 					map: map,
 					position: results[0].geometry.location
 				});
-				var hereToThere = getDirections('Dallas', address);
+				var hereToThere = getDirections(startAddress, endAddress);
 				console.log('Got back to plotAddress');
 				console.log('hereToThere is: ' + hereToThere);
 				/*var hereToThere = 'http://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&sensor=false&callback=blah'
@@ -138,10 +139,10 @@ function blah(data) {
 $(document).ready(function() {	
 	/*when the button is clicked*/
 	$("#btn").on("click", function() {
-		var currentSearch = $('input[name="searchTo"]').val();
+		var endPoint = $('input[name="searchTo"]').val();
 		var startingPoint = $('input[name="searchFrom"]').val();
-		console.log("You want to search for " + currentSearch);
-		plotAddress(currentSearch)
+		console.log("You want to go from " + startingPoint + " to " + endPoint);
+		plotAddress(startingPoint, endPoint);
 		return false;
 	});
 
@@ -149,10 +150,10 @@ $(document).ready(function() {
 	/*when Enter is pressed*/
 	$('body').on("keypress", function(event) {
 		if (event.which === 13) {
-			var currentSearch = $('input[name="searchTo"]').val();
+			var endPoint = $('input[name="searchTo"]').val();
 			var startingPoint = $('input[name="searchFrom"]').val();
-			console.log("You want to search for " + currentSearch);
-			plotAddress(startingPoint, currentSearch);
+			console.log("You want to go from " + startingPoint + " to " + endPoint);
+			plotAddress(startingPoint, endPoint);
 			return false;
 		}
 	});
