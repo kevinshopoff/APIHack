@@ -10,7 +10,7 @@ var result = null;
 function initialize() {
 	var mapOptions = {
 		zoom: 8,
-		center: new google.maps.LatLng(-34.397, 150.644),
+		center: new google.maps.LatLng(37.7679, -119.4892),
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	};
 
@@ -29,45 +29,10 @@ function loadScript() {
 	document.body.appendChild(script);
 }
 
-/*var json = (function () {
-    var json = null;
-    $.ajax({
-        'async': false,
-        'global': false,
-        'url': my_url,
-        'dataType': "json",
-        'success': function (data) {
-            json = data;
-        }
-    });
-    return json;
-})(); */
-
 
 function getDirections(start, finish) {
 	var directionsService = new google.maps.DirectionsService();
 	console.log('Get Directions from: ' + start + ' to: ' + finish);
-	/*var script = document.createElement('script');
-	script.type = 'text/javascript';
-	script.src = 'http://maps.googleapis.com/maps/api/directions/json?origin=' + start + '&destination=' + finish + '&sensor=false&' + 
-		'callback=blah';
-	console.log(script.src);
-	document.body.appendChild(script);*/
-	/*$.ajax({
-		'async': false,
-		'global': false,
-		'url' : 'http://maps.googleapis.com/maps/api/directions/json?origin=' + start + '&destination=' + finish + '&sensor=false&' + 
-		'callback=blah',
-		'dataType': "jsonp",
-		'success': function(data) {
-			json = data;
-		},
-		'error': function(data, status) {
-			console.log('oops! an error.');
-		}
-	});
-	
-	console.log('json is: ' + json);*/
 	
 	var request = {
 		origin:start,
@@ -78,13 +43,14 @@ function getDirections(start, finish) {
 		if (status == google.maps.DirectionsStatus.OK) {
 			console.log('result = ' + result.routes[0].legs[0].steps[3]./*html_instructions*//*duration.text*/instructions);
 			console.log('num steps = ' + result.routes[0].legs[0].steps.length);
+			$("#directions").empty();
 			for (i = 0; i<result.routes[0].legs[0].steps.length; i++) {
-				$('#directions').append('<p>' + result.routes[0].legs[0].steps[i].instructions + '</p>');
-				$('#directions').append('<p>' + result.routes[0].legs[0].steps[i].distance.text + '</p>');
-				$('#directions').append('<p>' + result.routes[0].legs[0].steps[i].duration.text + '</p>');
-				$('#directions').append('<p>' + result.routes[0].legs[0].steps[i].maneuver + '</p>');
-				$('#directions').append('<p>' + result.routes[0].legs[0].steps[i].travel_mode + '</p><br>')
-				console.log('i = ' + i + ": " + result.routes[0].legs[0].steps[i].distance.text);
+				var stepNum = i + 1;
+				var instr = result.routes[0].legs[0].steps[i].instructions;
+				var dist = result.routes[0].legs[0].steps[i].distance.text;
+				var dur = result.routes[0].legs[0].steps[i].duration.text;
+				$('#directions').append('<p>' + stepNum + '. ' + instr + ' for ' + dist + '(' + dur + ').</p>');
+				console.log('result = ' + result.routes[0].legs[0].steps[i].instructions);
 			};
 		}
 	});
@@ -94,7 +60,7 @@ function getDirections(start, finish) {
 	
 	
 	/*there needs to be some kind of return value set*/
-	return result;
+	return status;
 	    /*$.ajax({ 
         type: 'GET',
         url: 'http://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&sensor=false' ,
@@ -104,12 +70,6 @@ function getDirections(start, finish) {
         }
     });*/
 }
-
-function blah(data) {
-	json = data;
-	console.log(json);
-};
-
 
 	function plotAddress(startLoc, endLoc) {
 		var startAddress = startLoc;
