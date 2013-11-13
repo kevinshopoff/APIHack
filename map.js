@@ -29,7 +29,6 @@ function loadScript() {
 	document.body.appendChild(script);
 }
 
-
 function getDirections(start, finish) {
 	var directionsService = new google.maps.DirectionsService();
 	console.log('Get Directions from: ' + start + ' to: ' + finish);
@@ -42,14 +41,23 @@ function getDirections(start, finish) {
 	directionsService.route(request, function(result, status) {
 		if (status == google.maps.DirectionsStatus.OK) {
 			console.log('result = ' + result.routes[0].legs[0].steps[3]./*html_instructions*//*duration.text*/instructions);
-			console.log('num steps = ' + result.routes[0].legs[0].steps.length);
+			console.log('num_steps = ' + result.routes[0].legs[0].steps.length);
 			$("#directions").empty();
 			for (i = 0; i<result.routes[0].legs[0].steps.length; i++) {
+				var ptag = null;
 				var stepNum = i + 1;
 				var instr = result.routes[0].legs[0].steps[i].instructions;
 				var dist = result.routes[0].legs[0].steps[i].distance.text;
 				var dur = result.routes[0].legs[0].steps[i].duration.text;
-				$('#directions').append('<p>' + stepNum + '. ' + instr + ' for ' + dist + '(' + dur + ').</p>');
+				
+				if (stepNum%2 == 0) {
+					ptag = '<p class = \'shade\'>';
+				} else {
+					ptag = '<p>'
+				};
+				
+				$('#directions').append(ptag + stepNum + '. ' + instr + ' for ' + dist + ' (' + dur + ').</p>');
+				
 				console.log('result = ' + result.routes[0].legs[0].steps[i].instructions);
 			};
 		}
@@ -99,10 +107,10 @@ function getDirections(start, finish) {
 $(document).ready(function() {	
 	/*when the button is clicked*/
 	$("#btn").on("click", function() {
-		var endPoint = $('input[name="searchTo"]').val();
-		var startingPoint = $('input[name="searchFrom"]').val();
-		console.log("You want to go from " + startingPoint + " to " + endPoint);
-		plotAddress(startingPoint, endPoint);
+			var endPoint = $('input[name="searchTo"]').val();
+			var startingPoint = $('input[name="searchFrom"]').val();
+			console.log("You want to go from " + startingPoint + " to " + endPoint);
+			plotAddress(startingPoint, endPoint);
 		return false;
 	});
 

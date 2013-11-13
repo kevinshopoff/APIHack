@@ -22,12 +22,20 @@ h1 {
 	margin-left:50px;
 	width: 420px;
 	height: 400px;
-	border: 1px solid red;
+	/*border: 1px solid red;*/
 	display:inline-block;
 }
 
 #directions {
 	display:inline-block;
+}
+
+p {
+	font-size:10px;
+}
+ 
+.shade {
+	background-color:#FFFF66;
 }
 
 #btn {
