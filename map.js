@@ -79,21 +79,23 @@ function getDirections(start, finish) {
 				icon: "http://maps.google.com/mapfiles/ms/micons/red-dot.png"
 			});
 			
+			$('#directions').append('<ol id=\'steps\'>Directions <br> From: ' + result.routes[0].legs[0].start_address + '<br>To: ' + result.routes[0].legs[0].end_address);
+			
 			for (i = 0; i<result.routes[0].legs[0].steps.length; i++) {
-				var ptag = null;
+				var litag = null;
 				var stepNum = i + 1;
 				var instr = result.routes[0].legs[0].steps[i].instructions;
 				var dist = result.routes[0].legs[0].steps[i].distance.text;
 				var dur = result.routes[0].legs[0].steps[i].duration.text;
 				
 				if (stepNum%2 == 0) {
-					ptag = '<p class = \'shade\'>';
+					litag = '<li class = \'shade\'>';
 				} else {
-					ptag = '<p>'
+					litag = '<li>'
 				};
 				
 				//add the turn by turn directions to the UI
-				$('#directions').append(ptag + stepNum + '. ' + instr + ' for ' + dist + ' (' + dur + ').</p>'); 
+				$('#steps').append(litag + instr + ' for ' + dist + ' (' + dur + ').</li>'); 
 				
 				console.log('result = ' + result.routes[0].legs[0].steps[i].instructions);
 				
@@ -102,6 +104,8 @@ function getDirections(start, finish) {
 					myRouteCoordinates.push(new google.maps.LatLng(result.routes[0].legs[0].steps[i].lat_lngs[j].ob, result.routes[0].legs[0].steps[i].lat_lngs[j].pb));
 				};
 			};
+			
+			$('#directions').append('</ol>');
 			
 			//create the polyline
 			myRoute = new google.maps.Polyline({

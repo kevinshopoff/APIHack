@@ -79,6 +79,11 @@ h1 {
 	display:inline-block;
 }
 
+li {
+	list-style-type:decimal;
+	margin-left:20px;
+}
+
 .shade {
 	background-color:#FFFF66;
 }
