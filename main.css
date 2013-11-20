@@ -84,6 +84,10 @@ li {
 	margin-left:20px;
 }
 
+b {
+	font-weight:bold;
+}
+
 .shade {
 	background-color:#FFFF66;
 }
